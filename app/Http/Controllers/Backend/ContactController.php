@@ -20,5 +20,23 @@ class ContactController extends Controller
             'message' => $message,
         ]);
     }
+
+    public function list()
+    {
+        $result = Contact::latest()->get();
+        return view('backend.contact.contactList',compact('result'));
+    }
+    public function delete($id)
+    {
+        $result = Contact::find($id);
+        $result->delete();
+        $notification = [
+            'message' => 'Contact Data Successfully Delete',
+            'alert-type' => 'success',
+        ];
+        return redirect()
+            ->route('contact.lists')
+            ->with($notification);
+    }
 }
 

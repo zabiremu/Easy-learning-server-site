@@ -28,4 +28,41 @@ class HomePageController extends Controller
         $result = HomePage::select('video_description','video_url')->get();
         return $result;
     }
+
+    public function index()
+    {
+        $result = HomePage::latest()->first();
+        return view('backend.pages.homePage.update',compact('result'));
+    }
+
+    public function updateData(Request $request, $id)
+    {
+        $request->validate([
+            'title' => 'required',
+            'subTitle' => 'required' ,
+            'student' => 'required' ,
+            'course' => 'required',
+            'review' => 'required',
+            'tech_desc' => 'required' ,
+            'video' => 'required',
+            'url'=> 'required',
+        ]);
+
+        $data = HomePage::find($id);
+        $data->home_title = $request->title;
+        $data->home_sub_title = $request->subTitle;
+        $data->total_student = $request->student;
+        $data->total_course = $request->course;
+        $data->video_review = $request->review;
+        $data->tech_description = $request->tech_desc;
+        $data->video_description = $request->video;
+        $data->video_url = $request->url;
+        $data->save();
+        $notification = array(
+            'message' => "Home Page Data Successfully Updated",
+            'alert-type' => 'success',
+        );
+        return redirect()->route('update.home')->with($notification);
+    }
+
 }
